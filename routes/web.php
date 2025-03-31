@@ -26,3 +26,16 @@ Route::get('/aluno/create',
 
 Route::post('/aluno/store',
     [AlunoController::class,'store'])->name('aluno.store'); //post envia os dados de forma oculta pelo servidor TRABALHANDO COM ROTAS - METODO POST ENVIA OS DADOS
+
+    Route::delete('<aluno/{id}',
+    [AlunoController::class,'destroy'])
+    ->name('aluno.destroy'); //deleta os dados na tabela alauno
+
+
+Route::get('/aluno/edit/{id}',
+[AlunoController::class,'edit'])->name('aluno.edit');
+
+
+Route::put('/aluno/update/{id}php artisan serve',
+    [AlunoController::class,'update'])->name('aluno.update');
+

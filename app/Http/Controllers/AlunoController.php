@@ -12,7 +12,12 @@ class AlunoController extends Controller
      */
     public function index()
     {
-        return view('aluno.list');
+        // select * from alunos
+      $dados = Aluno::All();  // dados RECEBE aluno // sejam carregados e redirecionados, estamos na view e ela chama a rota e chama o controller e retorna a inofrmação
+
+      return view('aluno.list',
+      data: ['dados' => $dados]
+    );
     }
 
     /**
@@ -47,7 +52,7 @@ class AlunoController extends Controller
 
         Aluno::create($data);
 
-        redirect('aluno');
+        redirect(to:'aluno'); // store - redireciona o aluno
 
     }
 
@@ -64,7 +69,13 @@ class AlunoController extends Controller
      */
     public function edit(string $id)
     {
-        //
+      $dado = Aluno::findFail($id);
+
+
+        return view(
+            'aluno.form',
+            ['dado' => $dado]
+        );
     }
 
     /**
@@ -72,7 +83,27 @@ class AlunoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nome'=>'required|min:3|max:100', //VALIDAÇÃO DO NOME -> minimo 3 caracteres, maximo 100 caracteres
+            'cpf'=>'required|max:14',
+            'telefone'=>'nullable|min:10|max:40' //telefone opcional
+        ],[
+            'nome.required'=>'0 :attribute é obrigatório', //se respondido errado, vai aparecer a msg "atribute(nome nesse caso) é obrigatório"
+            'cpf.required'=>'0 :attribute é obrigatório',
+        ]);
+
+        $data = [
+            'nome'=>$request->nome,
+            'cpf'=>$request->cpf,
+            'telefone'=>$request->telefone,
+        ];
+
+        Aluno::updateOrcreate(
+        ['id' =>$id],
+         $data );
+
+        redirect(to:'aluno'); // store - redireciona o aluno
+
     }
 
     /**
@@ -80,6 +111,12 @@ class AlunoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+       // dd(vars: "teste");
+       $dado = Aluno:: find(id: $id);
+
+       $dado->delete();
+
+       return redirect ('aluno');
+
     }
 }
